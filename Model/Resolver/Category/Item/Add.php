@@ -65,7 +65,15 @@ class Add extends Category
                 : $this->getProductById((int)$this->checkItemInput($args, 'product_id'));
             $categoryId = $this->checkItemInput($args, 'category_id');
 
-            $this->wishlistRepository->addItemToCategory($product->getEntityId(), $categoryId, $customerId);
+            $this->wishlistRepository->addItemToCategory(
+                $product->getEntityId(),
+                $categoryId,
+                $customerId,
+                [
+                    'qty' => $this->checkItemInput($args, 'qty'),
+                    'description' => $this->checkItemInput($args, 'description')
+                ]
+            );
 
             return $product->getData();
         } catch (Exception $exception) {

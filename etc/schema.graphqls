@@ -50,6 +50,8 @@ input MpBetterWishlistItemInput {
     product_id: Int @doc(description: "Product id.")
     sku: String @doc(description: "Product SKU.")
     category_id: String @doc(description: "Category id.")
+    qty: Int @doc(description: "Wishlist item description")
+    description: String @doc(description: "Wishlist item description")
 }
 
 type MpBetterWishlistConfigOutput {
