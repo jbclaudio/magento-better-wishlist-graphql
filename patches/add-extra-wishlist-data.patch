@@ -1,0 +1,59 @@
+Add extra wishlist data dummy method to override with plugin
+
+@package mageplaza/module-better-wishlist
+
+--- a/Model/Api/BetterWishlistRepository.php
++++ b/Model/Api/BetterWishlistRepository.php
+@@ -30,6 +30,7 @@
+ use Magento\Framework\Webapi\Exception as ApiException;
+ use Magento\Store\Model\StoreManagerInterface;
+ use Magento\Wishlist\Helper\Data as WishlistHelper;
++use Magento\Wishlist\Model\Item as MagentoWishlistItem;
+ use Magento\Wishlist\Model\Wishlist;
+ use Magento\Wishlist\Model\WishlistFactory;
+ use Mageplaza\BetterWishlist\Api\BetterWishlistRepositoryInterface;
+@@ -139,7 +140,7 @@
+     /**
+      * @inheritDoc
+      */
+-    public function addItemToCategory($productId, $categoryId, $customerId)
++    public function addItemToCategory($productId, $categoryId, $customerId, $extraData = [])
+     {
+         $requestParams = [
+             'product' => $productId
+@@ -174,6 +175,9 @@
+             $buyRequest     = new DataObject($requestParams);
+             $wishlistItem   = $wishlist->addNewItem($product, $buyRequest);
+             $wishlistItemId = $wishlistItem->getId();
++            if ($extraData) {
++                $wishlistItem = $this->addExtraWishlistData($wishlistItem, $extraData);
++            }
+             if ($categoryId) {
+                 $category = $this->mpWishlistCategoryFactory->create()
+                     ->loadByCategoryId($categoryId, $customerId);
+@@ -473,4 +477,8 @@
+
+         return $categories;
+     }
++
++    public function addExtraWishlistData(MagentoWishlistItem $wishlistItem, array $extraData)
++    {
++    }
+ }
+
+--- a/Api/BetterWishlistRepositoryInterface.php
++++ b/Api/BetterWishlistRepositoryInterface.php
+@@ -34,11 +34,12 @@
+      * @param int $productId
+      * @param string $categoryId
+      * @param int $customerId
++     * @param array $extraData
+      *
+      * @return boolean
+      * @throws Exception
+      */
+-    public function addItemToCategory($productId, $categoryId, $customerId);
++    public function addItemToCategory($productId, $categoryId, $customerId, $extraData);
+
+     /**
+      * @param int $customerId

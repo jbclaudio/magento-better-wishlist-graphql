@@ -35,10 +35,13 @@ type Mutation {
     ):Boolean @resolver(class: "Mageplaza\\BetterWishlistGraphQl\\Model\\Resolver\\Category\\Delete") @doc(description: "Delete new Mageplaza Wishlist category.")
     MpBetterWishlistAddItem(
         input: MpBetterWishlistItemInput @doc(description: "Information product and category.")
-    ):MpBetterWishlistOutput @resolver(class: "Mageplaza\\BetterWishlistGraphQl\\Model\\Resolver\\Category\\Item\\Add") @doc(description: "Add Item in to Mageplaza Wishlist category.")
+    ):MpBetterWishlistOutput @resolver(class: "Mageplaza\\BetterWishlistGraphQl\\Model\\Resolver\\Category\\Item\\Add") @doc(description: "Add Item into Mageplaza Wishlist category.")
     MpBetterWishlistRemoveItem(
         input: MpBetterWishlistItemInput @doc(description: "Information product and category.")
-    ):Boolean @resolver(class: "Mageplaza\\BetterWishlistGraphQl\\Model\\Resolver\\Category\\Item\\Remove") @doc(description: "Remove Item from to Mageplaza Wishlist category.")
+    ):Boolean @resolver(class: "Mageplaza\\BetterWishlistGraphQl\\Model\\Resolver\\Category\\Item\\Remove") @doc(description: "Remove Item from Mageplaza Wishlist category.")
+    MpBetterWishlistEditItem(
+        input: MpBetterWishlistItemInput @doc(description: "Information product and category.")
+    ):Boolean @resolver(class: "Mageplaza\\BetterWishlistGraphQl\\Model\\Resolver\\Category\\Item\\Edit") @doc(description: "Edit Item from Mageplaza Wishlist category.")
 }
 
 input MpBetterWishlistCategoryInput {

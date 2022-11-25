@@ -40,12 +40,14 @@ class Remove extends Category
      */
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
     {
-        $customerId = $this->checkLogin($context);
-        $productId  = (int) $this->checkItemInput($args, 'product_id');
-        $categoryId = $this->checkItemInput($args, 'category_id');
-
         try {
-            return $this->wishlistRepository->removeItemInCategory($productId, $categoryId, $customerId);
+            $customerId = $this->checkLogin($context);
+            $product = isset($args['input']['sku'])
+                ? $this->getProductBySku($args['input']['sku'])
+                : $this->getProductById((int)$this->checkItemInput($args, 'product_id'));
+            $categoryId = $this->checkItemInput($args, 'category_id');
+
+            return $this->wishlistRepository->removeItemInCategory($product->getEntityId(), $categoryId, $customerId);
         } catch (Exception $exception) {
             throw new GraphQlInputException(__($exception->getMessage()));
         }

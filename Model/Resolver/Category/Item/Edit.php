@@ -24,20 +24,16 @@ declare(strict_types=1);
 namespace Mageplaza\BetterWishlistGraphQl\Model\Resolver\Category\Item;
 
 use Exception;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Mageplaza\BetterWishlist\Api\BetterWishlistRepositoryInterface;
-use Mageplaza\BetterWishlist\Model\CategoryFactory;
 use Mageplaza\BetterWishlistGraphQl\Model\Resolver\Category;
 
 /**
- * Class Add
+ * Class Edit
  * @package Mageplaza\BetterWishlistGraphQl\Model\Resolver\Category\Item
  */
-class Add extends Category
+class Edit extends Category
 {
     /**
      * @inheritdoc
@@ -51,7 +47,7 @@ class Add extends Category
                 : $this->getProductById((int)$this->checkItemInput($args, 'product_id'));
             $categoryId = $this->checkItemInput($args, 'category_id');
 
-            $this->wishlistRepository->addItemToCategory(
+            return $this->wishlistRepository->editItemInCategory(
                 $product->getEntityId(),
                 $categoryId,
                 $customerId,
@@ -60,8 +56,6 @@ class Add extends Category
                     'description' => $this->checkItemInput($args, 'description')
                 ]
             );
-
-            return $product->getData();
         } catch (Exception $exception) {
             throw new GraphQlInputException(__($exception->getMessage()));
         }

@@ -24,11 +24,13 @@ declare(strict_types=1);
 namespace Mageplaza\BetterWishlistGraphQl\Model\Resolver;
 
 use Exception;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
-use Mageplaza\BetterWishlist\Api\BetterWishlistRepositoryInterface;
-use Mageplaza\BetterWishlist\Model\CategoryFactory as MpWishlistCategoryFactory;
+use Mageplaza\BetterWishlist\Model\CategoryFactory as mpWishlistCategoryFactory;
+use Mageplaza\BetterWishlistGraphQl\Model\Api\BetterWishlistRepository;
 
 /**
  * Class Category
@@ -36,36 +38,12 @@ use Mageplaza\BetterWishlist\Model\CategoryFactory as MpWishlistCategoryFactory;
  */
 abstract class Category implements ResolverInterface
 {
-    /**
-     * @var BetterWishlistRepositoryInterface
-     */
-    protected $wishlistRepository;
-
-    /**
-     * @var GetCustomer
-     */
-    protected $getCustomer;
-
-    /**
-     * @var MpWishlistCategoryFactory
-     */
-    protected $mpWishlistCategoryFactory;
-
-    /**
-     * Config constructor.
-     *
-     * @param BetterWishlistRepositoryInterface $wishlistRepository
-     * @param MpWishlistCategoryFactory $mpWishlistCategoryFactory
-     * @param GetCustomer $getCustomer
-     */
     public function __construct(
-        BetterWishlistRepositoryInterface $wishlistRepository,
-        MpWishlistCategoryFactory $mpWishlistCategoryFactory,
-        GetCustomer $getCustomer
+        protected BetterWishlistRepository $wishlistRepository,
+        protected mpWishlistCategoryFactory $mpWishlistCategoryFactory,
+        protected GetCustomer $getCustomer,
+        protected ProductRepositoryInterface $productRepository
     ) {
-        $this->wishlistRepository        = $wishlistRepository;
-        $this->getCustomer               = $getCustomer;
-        $this->mpWishlistCategoryFactory = $mpWishlistCategoryFactory;
     }
 
     /**
@@ -106,5 +84,15 @@ abstract class Category implements ResolverInterface
     public function checkItemInput($args, $key)
     {
         return isset($args['input'][$key]) ? $args['input'][$key] : '';
+    }
+
+    public function getProductBySku(string $sku): ProductInterface
+    {
+        return $this->productRepository->get($sku);
+    }
+
+    public function getProductById(int $id): ProductInterface
+    {
+        return $this->productRepository->getById($id);
     }
 }
